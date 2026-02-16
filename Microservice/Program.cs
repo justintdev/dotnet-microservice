@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Infrastructure;
 using Infrastructure.Persistence;
+using Microservice.Health;
 using Microservice.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -124,36 +124,17 @@ app.UseAuthorization();
 app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
     Predicate = registration => registration.Tags.Contains("live"),
-    ResponseWriter = WriteHealthResponse
+    ResponseWriter = HealthCheckResponseWriter.WriteAsync
 });
 
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
     Predicate = registration => registration.Tags.Contains("ready"),
-    ResponseWriter = WriteHealthResponse
+    ResponseWriter = HealthCheckResponseWriter.WriteAsync
 });
 
 app.MapControllers();
 
 app.Run();
-
-static Task WriteHealthResponse(HttpContext context, Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport report)
-{
-    context.Response.ContentType = "application/json";
-
-    var payload = JsonSerializer.Serialize(new
-    {
-        status = report.Status.ToString(),
-        checks = report.Entries.Select(entry => new
-        {
-            name = entry.Key,
-            status = entry.Value.Status.ToString(),
-            description = entry.Value.Description,
-            duration = entry.Value.Duration.ToString()
-        })
-    });
-
-    return context.Response.WriteAsync(payload);
-}
 
 public partial class Program;
