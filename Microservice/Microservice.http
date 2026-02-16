@@ -1,0 +1,30 @@
+@Microservice_HostAddress = http://localhost:5164
+@BearerToken = REPLACE_WITH_AUTH0_JWT
+
+GET {{Microservice_HostAddress}}/health/live
+Accept: application/json
+
+###
+
+GET {{Microservice_HostAddress}}/health/ready
+Accept: application/json
+
+###
+
+GET {{Microservice_HostAddress}}/api/catalog-items
+Accept: application/json
+Authorization: Bearer {{BearerToken}}
+
+###
+
+POST {{Microservice_HostAddress}}/api/catalog-items
+Content-Type: application/json
+Authorization: Bearer {{BearerToken}}
+
+{
+  "name": "Mechanical Keyboard",
+  "description": "Compact 75% keyboard",
+  "category": "Electronics",
+  "price": 129.99,
+  "quantityInStock": 15
+}

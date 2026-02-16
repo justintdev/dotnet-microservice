@@ -1,0 +1,83 @@
+openapi: 3.0.3
+info:
+  title: Catalog Microservice API
+  version: v1
+  description: Clean architecture sample for managing catalog items.
+servers:
+  - url: https://localhost:5001
+paths:
+  /api/catalog-items:
+    get:
+      summary: List catalog items
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Create a catalog item
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCatalogItemRequest'
+      responses:
+        '201':
+          description: Created
+  /api/catalog-items/{id}:
+    get:
+      summary: Get catalog item by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+        '404':
+          description: Not found
+  /health/live:
+    get:
+      summary: Liveness probe
+      responses:
+        '200':
+          description: Service is alive
+  /health/ready:
+    get:
+      summary: Readiness probe
+      responses:
+        '200':
+          description: Service dependencies are ready
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateCatalogItemRequest:
+      type: object
+      required:
+        - name
+        - category
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          example: Electronics
+        price:
+          type: number
+          format: decimal
+        quantityInStock:
+          type: integer

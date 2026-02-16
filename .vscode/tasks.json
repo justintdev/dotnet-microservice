@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-microservice",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/Microservice/Microservice.csproj",
+        "-v",
+        "minimal"
+      ],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}
